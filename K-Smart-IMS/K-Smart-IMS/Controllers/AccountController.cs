@@ -69,7 +69,7 @@ namespace K_Smart_IMS.Controllers
             {                
                 var result = await signInManager.PasswordSignInAsync(
                     model.Username, model.Password, isPersistent: model.RememberMe, 
-                    lockoutOnFailure: false);
+                    lockoutOnFailure: true);
 
                 if (result.Succeeded)
                 {
@@ -82,6 +82,14 @@ namespace K_Smart_IMS.Controllers
                     {
                         return RedirectToAction("Index", "Home");
                     }
+                }
+                if (result.IsLockedOut)//Lock out test.
+                {
+                    ModelState.AddModelError("", "Account is Locked out.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid username/password.");
                 }
             }
             ModelState.AddModelError("", "Invalid username/password.");
